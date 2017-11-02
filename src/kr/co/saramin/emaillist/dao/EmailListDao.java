@@ -29,13 +29,13 @@ public class EmailListDao {
 			//4. excute sql
 			String sql	= "SELECT * FROM emaillist";
 			rs		= stmt.executeQuery(sql);
-			
+						
 			//5. restore result
 			while (rs.next()) {
-				Long no 		= rs.getLong(1);
-				String firstName = rs.getString(2);
-				String lastName = rs.getString(3);
-				String email    = rs.getString(4);
+				Long no 		= rs.getLong("no");
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
+				String email    = rs.getString("email");
 				
 				EmailListVo evo = new EmailListVo();
 				
@@ -75,12 +75,14 @@ public class EmailListDao {
 		return list;
 	}
 	
-	public void insert(EmailListVo emailListVo)
+	public boolean insert(EmailListVo emailListVo)
 	{
 		
 		String url = "jdbc:mysql://localhost/webdb";
 		Connection con = null;
 		PreparedStatement prstmt = null;
+		
+		int count = 0;
 		
 		try {
 			//1. jdbs driver
@@ -100,9 +102,7 @@ public class EmailListDao {
 			prstmt.setString(3, emailListVo.getEmail());
 			
 			//5. query excute
-			prstmt.executeUpdate();
-
-			
+			count = prstmt.executeUpdate();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("Driver loading fail.. ");
@@ -124,6 +124,8 @@ public class EmailListDao {
 				e.printStackTrace();
 			}
 		}
+		
+		return count < 1 ? false : true;
 	}
 	
 }
